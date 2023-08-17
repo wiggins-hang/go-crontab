@@ -8,9 +8,9 @@ import (
 )
 
 func SetJobRouter(e *gin.Engine) {
-	//mux.HandleFunc("/job/save", handleJobSave)
+	e.POST("/job/save", api.JobSave)
 	//mux.HandleFunc("/job/delete", handleJobDelete)
-	//mux.HandleFunc("/job/list", handleJobList)
+	e.GET("/job/list", api.JobList)
 	//mux.HandleFunc("/job/kill", handleJobKill)
 	//mux.HandleFunc("/job/log", handleJobLog)
 	e.GET("/worker/list", api.WorkerList)

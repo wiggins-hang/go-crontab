@@ -18,8 +18,8 @@ import (
 )
 
 func main() {
-	InitDepend()
 
+	InitDepend()
 	quit := make(chan os.Signal)
 	signal.Notify(quit, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT, syscall.SIGUSR1, syscall.SIGUSR2)
 	<-quit
@@ -29,7 +29,7 @@ func main() {
 	defer cancel()
 	// 调用注册好的关闭func
 	shutdown.ConnectResourceListeners.NotifyStopListener(ctx)
-	log.Info("shutdown release")
+	log.Info("shutdown release success")
 }
 
 func InitDepend() {
@@ -40,6 +40,10 @@ func InitDepend() {
 
 	if err := mgr.InitWorkerMgr(); err != nil {
 		log.Fatalf("InitWorkerMgr error %s", err.Error())
+	}
+
+	if err := mgr.InitJobMgr(); err != nil {
+		log.Fatalf("InitJobMgr error %s", err.Error())
 	}
 
 	InitHttpServer()

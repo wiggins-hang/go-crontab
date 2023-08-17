@@ -74,9 +74,9 @@ func InitWorkerMgr() error {
 
 	// 注册 etcd 关闭事件
 	shutdown.ConnectResourceListeners.RegisterStopListener(func() {
-		log.Info("close etcd connect start")
+		log.Info("worker close etcd connect start")
 		GWorkerMgr.client.Close()
-		log.Info("close etcd connect stop")
+		log.Info("worker close etcd connect stop")
 	})
 	return nil
 }

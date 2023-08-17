@@ -32,3 +32,34 @@ func WorkerList(ctx *gin.Context) {
 	})
 	return
 }
+
+func JobList(ctx *gin.Context) {
+
+	// 获取任务列表
+	jobList, err := mgr.GJobMgr.ListJobs(ctx)
+	if err != nil {
+		log.ErrorContext(ctx, "list jobs error ", err)
+		ctx.JSON(http.StatusInternalServerError, nil)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, common.Response{
+		Errno: 0,
+		Msg:   "",
+		Data:  jobList,
+	})
+}
+
+// JobSave 保存任务接口
+// POST job={"name": "job1", "command": "echo hello", "cronExpr": "* * * * *"}
+func JobSave(ctx *gin.Context) {
+	req := common.Job{}
+
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		log.ErrorContextf(ctx, "job save bind param error", err)
+		ctx.JSON(http.StatusInternalServerError, nil)
+	}
+
+	// 保存到etcd
+
+}
