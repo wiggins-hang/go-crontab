@@ -11,12 +11,25 @@ import (
 	"go-crontab/cmd/master/config"
 	"go-crontab/cmd/master/mgr"
 	"go-crontab/cmd/master/routers"
+	"go-crontab/common"
 	"go-crontab/log"
 	"go-crontab/model"
+	"go-crontab/shutdown"
 )
 
 func main() {
 	InitDepend()
+
+	quit := make(chan os.Signal)
+	signal.Notify(quit, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT, syscall.SIGUSR1, syscall.SIGUSR2)
+	<-quit
+	// 释放资源
+	log.Info("start to release source ")
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+	// 调用注册好的关闭func
+	shutdown.ConnectResourceListeners.NotifyStopListener(ctx)
+	log.Info("shutdown release")
 }
 
 func InitDepend() {
@@ -29,6 +42,11 @@ func InitDepend() {
 		log.Fatalf("InitWorkerMgr error %s", err.Error())
 	}
 
+	InitHttpServer()
+
+}
+
+func InitHttpServer() {
 	// 注册http 服务
 	routers.Include(routers.SetJobRouter)
 	router := routers.Init()
@@ -38,20 +56,17 @@ func InitDepend() {
 		Handler: router,
 	}
 
-	go func() {
+	common.SafelyGo(func() {
 		log.Infof(" master start listening addr %s ", server.Addr)
+		shutdown.ConnectResourceListeners.RegisterStopListener(func() {
+			log.Info("start to close  http connect start")
+			if err := server.Shutdown(context.Background()); err != nil {
+				log.Error("close http server error ", err)
+			}
+			log.Info("close http connect stop")
+		})
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatal(" master service listening err: ", err)
 		}
-	}()
-
-	quit := make(chan os.Signal)
-	signal.Notify(quit, syscall.SIGTERM, syscall.SIGHUP)
-	<-quit
-	time.Sleep(10 * time.Second)
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-	if err := server.Shutdown(ctx); err != nil {
-		log.Fatal("master server shutdown:", err)
-	}
+	})
 }

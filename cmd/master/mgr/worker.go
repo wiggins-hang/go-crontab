@@ -6,6 +6,8 @@ import (
 
 	"go-crontab/cmd/master/config"
 	"go-crontab/common"
+	"go-crontab/log"
+	"go-crontab/shutdown"
 
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	"go.etcd.io/etcd/client/v3"
@@ -69,5 +71,12 @@ func InitWorkerMgr() error {
 		kv:     kv,
 		lease:  lease,
 	}
+
+	// 注册 etcd 关闭事件
+	shutdown.ConnectResourceListeners.RegisterStopListener(func() {
+		log.Info("close etcd connect start")
+		GWorkerMgr.client.Close()
+		log.Info("close etcd connect stop")
+	})
 	return nil
 }

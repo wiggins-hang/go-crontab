@@ -1,6 +1,9 @@
 package model
 
 import (
+	"go-crontab/log"
+	"go-crontab/shutdown"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -14,6 +17,14 @@ func InitDb(target string) {
 		panic(err)
 	}
 	db = connect
+
+	// 注册db关闭事件
+	shutdown.ConnectResourceListeners.RegisterStopListener(func() {
+		log.Info("start to close db")
+		a, _ := db.DB()
+		a.Close()
+		log.Info("close db success")
+	})
 }
 
 func GetDb() *gorm.DB {
