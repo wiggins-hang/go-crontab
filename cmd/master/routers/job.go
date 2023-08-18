@@ -9,14 +9,12 @@ import (
 
 func SetJobRouter(e *gin.Engine) {
 	e.POST("/job/save", api.JobSave)
-	//mux.HandleFunc("/job/delete", handleJobDelete)
+	e.POST("/job/delete", api.JobDelete)
 	e.GET("/job/list", api.JobList)
-	//mux.HandleFunc("/job/kill", handleJobKill)
-	//mux.HandleFunc("/job/log", handleJobLog)
+	e.POST("/job/kill", api.JobKill)
+	e.GET("/job/log", api.JobLog)
 	e.GET("/worker/list", api.WorkerList)
-	e.StaticFile("/", config.GetConf().Webroot)
 	// 静态文件目录
-	//staticDir = http.Dir(config.GetConf().Webroot)
-	//staticHandler = http.FileServer(staticDir)
-	//mux.Handle("/", http.StripPrefix("/", staticHandler)) //   ./webroot/index.html
+	// ./webroot/index.html
+	e.StaticFile("/", config.GetConf().Webroot)
 }

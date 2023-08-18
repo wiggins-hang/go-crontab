@@ -80,7 +80,8 @@ func (jobMgr *JobMgr) ListJobs(ctx context.Context) ([]*common.Job, error) {
 }
 
 func (jobMgr *JobMgr) SaveJob(ctx context.Context, job *common.Job) (*common.Job, error) {
-	jobKey := common.JOB_SAVE_DIR
+	// etcd的保存key
+	jobKey := common.JOB_SAVE_DIR + job.Name
 
 	jobVal, err := jsoner.MarshalToString(job)
 	if err != nil {
@@ -100,6 +101,28 @@ func (jobMgr *JobMgr) SaveJob(ctx context.Context, job *common.Job) (*common.Job
 		if err = jsoner.UnmarshalByte(putRsp.PrevKv.Value, &oldJob); err != nil {
 			log.ErrorContext(ctx, "unmarshal error ", err)
 			return nil, err
+		}
+	}
+	return oldJob, nil
+}
+
+func (jobMgr *JobMgr) DeleteJob(ctx context.Context, name string) (*common.Job, error) {
+	// etcd中保存任务的key
+	jobKey := common.JOB_SAVE_DIR + name
+
+	oldJob := &common.Job{}
+	// 从etcd中删除它
+	delResp, err := jobMgr.kv.Delete(ctx, jobKey, clientv3.WithPrevKV())
+	if err != nil {
+		log.ErrorContextf(ctx, "del job etcd error job key is %s error : %v", jobKey, err)
+		return oldJob, err
+	}
+	// 返回被删除的任务信息
+	if len(delResp.PrevKvs) != 0 {
+		// 解析一下旧值, 返回它
+		if err = jsoner.UnmarshalByte(delResp.PrevKvs[0].Value, &oldJob); err != nil {
+			log.ErrorContext(ctx, "json umarshal error ", err)
+			return oldJob, err
 		}
 	}
 	return oldJob, nil
