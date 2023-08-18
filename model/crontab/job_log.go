@@ -19,6 +19,6 @@ type LogPageFilter struct {
 func JobLogPageList(db *gorm.DB, pageFilter LogPageFilter) ([]*db_model.JobLog, error) {
 	logList := make([]*db_model.JobLog, 0)
 
-	err := db.Where("name = ?", pageFilter.Name).Limit(pageFilter.Limit).Offset(pageFilter.Skip).Find(&logList).Error
+	err := db.Where("job_name = ?", pageFilter.Name).Limit(pageFilter.Limit).Offset(pageFilter.Skip).Find(&logList).Error
 	return logList, err
 }
