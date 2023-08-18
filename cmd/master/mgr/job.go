@@ -58,7 +58,7 @@ func InitJobMgr() (err error) {
 
 func (jobMgr *JobMgr) ListJobs(ctx context.Context) ([]*common.Job, error) {
 	// 任务保存的目录
-	dirKey := common.JOB_SAVE_DIR
+	dirKey := common.JobSaveDir
 
 	// 获取目录下所有任务信息
 	getResp, err := jobMgr.kv.Get(ctx, dirKey, clientv3.WithPrefix())
@@ -81,7 +81,7 @@ func (jobMgr *JobMgr) ListJobs(ctx context.Context) ([]*common.Job, error) {
 
 func (jobMgr *JobMgr) SaveJob(ctx context.Context, job *common.Job) (*common.Job, error) {
 	// etcd的保存key
-	jobKey := common.JOB_SAVE_DIR + job.Name
+	jobKey := common.JobSaveDir + job.Name
 
 	jobVal, err := jsoner.MarshalToString(job)
 	if err != nil {
@@ -108,7 +108,7 @@ func (jobMgr *JobMgr) SaveJob(ctx context.Context, job *common.Job) (*common.Job
 
 func (jobMgr *JobMgr) DeleteJob(ctx context.Context, name string) (*common.Job, error) {
 	// etcd中保存任务的key
-	jobKey := common.JOB_SAVE_DIR + name
+	jobKey := common.JobSaveDir + name
 
 	oldJob := &common.Job{}
 	// 从etcd中删除它

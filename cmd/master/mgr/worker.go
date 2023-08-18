@@ -34,7 +34,7 @@ func (workerMgr *WorkerMgr) ListWorkers() ([]string, error) {
 	workerArr := make([]string, 0)
 
 	// 获取目录下所有Kv
-	getResp, err := workerMgr.kv.Get(context.TODO(), common.JOB_WORKER_DIR, clientv3.WithPrefix())
+	getResp, err := workerMgr.kv.Get(context.TODO(), common.JobWorkersDir, clientv3.WithPrefix())
 	if err != nil {
 		return workerArr, err
 	}

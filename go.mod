@@ -4,6 +4,8 @@ go 1.17
 
 require (
 	github.com/gin-gonic/gin v1.9.1
+	github.com/gorhill/cronexpr v0.0.0-20180427100037-88b0669f7d75
+	github.com/json-iterator/go v1.1.12
 	github.com/zeromicro/go-zero v1.5.4
 	go.etcd.io/etcd/api/v3 v3.5.9
 	go.etcd.io/etcd/client/v3 v3.5.9
@@ -31,7 +33,6 @@ require (
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
-	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.4 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect

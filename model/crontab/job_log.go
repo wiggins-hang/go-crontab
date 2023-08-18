@@ -10,6 +10,10 @@ func CreateJob(db *gorm.DB, log *db_model.JobLog) error {
 	return db.Create(log).Error
 }
 
+func CreateBatchJob(db *gorm.DB, log []*db_model.JobLog) error {
+	return db.Create(log).Error
+}
+
 type LogPageFilter struct {
 	Skip  int
 	Limit int
