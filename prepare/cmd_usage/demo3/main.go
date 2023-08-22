@@ -1,14 +1,14 @@
 package main
 
 import (
-	"os/exec"
 	"context"
-	"time"
 	"fmt"
+	"os/exec"
+	"time"
 )
 
 type result struct {
-	err error
+	err    error
 	output []byte
 }
 
@@ -16,11 +16,11 @@ func main() {
 	//  执行1个cmd, 让它在一个协程里去执行, 让它执行2秒: sleep 2; echo hello;
 	// 1秒的时候, 我们杀死cmd
 	var (
-		ctx context.Context
+		ctx        context.Context
 		cancelFunc context.CancelFunc
-		cmd *exec.Cmd
+		cmd        *exec.Cmd
 		resultChan chan *result
-		res *result
+		res        *result
 	)
 
 	// 创建了一个结果队列
@@ -34,16 +34,16 @@ func main() {
 	go func() {
 		var (
 			output []byte
-			err error
+			err    error
 		)
-		cmd = exec.CommandContext(ctx, "C:\\cygwin64\\bin\\bash.exe", "-c", "sleep 2;echo hello;")
+		cmd = exec.CommandContext(ctx, "bash", "-c", "sleep 2;echo hello;")
 
 		// 执行任务, 捕获输出
 		output, err = cmd.CombinedOutput()
 
 		// 把任务输出结果, 传给main协程
 		resultChan <- &result{
-			err: err,
+			err:    err,
 			output: output,
 		}
 	}()
@@ -55,7 +55,7 @@ func main() {
 	cancelFunc()
 
 	// 在main协程里, 等待子协程的退出，并打印任务执行结果
-	res = <- resultChan
+	res = <-resultChan
 
 	// 打印任务执行结果
 	fmt.Println(res.err, string(res.output))

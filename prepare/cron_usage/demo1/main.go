@@ -1,16 +1,17 @@
 package main
 
 import (
-	"github.com/gorhill/cronexpr"
 	"fmt"
 	"time"
+
+	"github.com/gorhill/cronexpr"
 )
 
 func main() {
 	var (
-		expr *cronexpr.Expression
-		err error
-		now time.Time
+		expr     *cronexpr.Expression
+		err      error
+		now      time.Time
 		nextTime time.Time
 	)
 

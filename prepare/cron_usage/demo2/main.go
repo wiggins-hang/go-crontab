@@ -1,25 +1,26 @@
 package main
 
 import (
-	"github.com/gorhill/cronexpr"
-	"time"
 	"fmt"
+	"time"
+
+	"github.com/gorhill/cronexpr"
 )
 
 // 代表一个任务
 type CronJob struct {
-	expr *cronexpr.Expression
-	nextTime time.Time	// expr.Next(now)
+	expr     *cronexpr.Expression
+	nextTime time.Time // expr.Next(now)
 }
 
 func main() {
 	// 需要有1个调度协程, 它定时检查所有的Cron任务, 谁过期了就执行谁
 
 	var (
-		cronJob *CronJob
-		expr *cronexpr.Expression
-		now time.Time
-		scheduleTable map[string]*CronJob	// key: 任务的名字,
+		cronJob       *CronJob
+		expr          *cronexpr.Expression
+		now           time.Time
+		scheduleTable map[string]*CronJob // key: 任务的名字,
 	)
 
 	scheduleTable = make(map[string]*CronJob)
@@ -30,7 +31,7 @@ func main() {
 	// 1, 我们定义2个cronjob
 	expr = cronexpr.MustParse("*/5 * * * * * *")
 	cronJob = &CronJob{
-		expr: expr,
+		expr:     expr,
 		nextTime: expr.Next(now),
 	}
 	// 任务注册到调度表
@@ -38,7 +39,7 @@ func main() {
 
 	expr = cronexpr.MustParse("*/5 * * * * * *")
 	cronJob = &CronJob{
-		expr: expr,
+		expr:     expr,
 		nextTime: expr.Next(now),
 	}
 	// 任务注册到调度表
@@ -49,7 +50,7 @@ func main() {
 		var (
 			jobName string
 			cronJob *CronJob
-			now time.Time
+			now     time.Time
 		)
 		// 定时检查一下任务调度表
 		for {
@@ -71,7 +72,7 @@ func main() {
 
 			// 睡眠100毫秒
 			select {
-			case <- time.NewTimer(100 * time.Millisecond).C:	// 将在100毫秒可读，返回
+			case <-time.NewTimer(100 * time.Millisecond).C: // 将在100毫秒可读，返回
 			}
 		}
 	}()

@@ -1,21 +1,17 @@
 package main
 
 import (
-	"os/exec"
 	"fmt"
+	"os/exec"
 )
 
 func main() {
-	var (
-		cmd *exec.Cmd
-		err error
-	)
 
 	// cmd = exec.Command("/bin/bash", "-c", "echo 1;echo2;")
 
-	cmd = exec.Command("C:\\cygwin64\\bin\\bash.exe", "-c", "echo 1")
+	cmd := exec.Command("bash", "-c", "echo 1")
 
-	err = cmd.Run()
+	a, err := cmd.CombinedOutput()
 
-	fmt.Println(err)
+	fmt.Println(string(a), err)
 }
