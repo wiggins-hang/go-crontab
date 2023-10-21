@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"fmt"
 	"time"
 
 	"go-crontab/common"
@@ -140,7 +139,7 @@ func (scheduler *Scheduler) TryStartJob(jobPlan *common.JobSchedulePlan) {
 
 	// 如果任务正在执行，跳过本次调度
 	if jobExecuteInfo, jobExecuting = scheduler.jobExecutingTable[jobPlan.Job.Name]; jobExecuting {
-		// fmt.Println("尚未退出,跳过执行:", jobPlan.Job.Name)
+		log.Error("尚未退出,跳过执行:", jobPlan.Job.Name)
 		return
 	}
 
@@ -151,7 +150,7 @@ func (scheduler *Scheduler) TryStartJob(jobPlan *common.JobSchedulePlan) {
 	scheduler.jobExecutingTable[jobPlan.Job.Name] = jobExecuteInfo
 
 	// 执行任务
-	fmt.Println("执行任务:", jobExecuteInfo.Job.Name, jobExecuteInfo.PlanTime, jobExecuteInfo.RealTime)
+	log.Info("执行任务:", jobExecuteInfo.Job.Name, jobExecuteInfo.PlanTime, jobExecuteInfo.RealTime)
 	GExecutor.ExecuteJob(jobExecuteInfo)
 }
 
