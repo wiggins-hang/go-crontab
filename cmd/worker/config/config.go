@@ -19,7 +19,7 @@ func InitConf() {
 		EtcdDialTimeout:     5000,
 		JobLogBatchSize:     100,
 		JobLogCommitTimeout: 100,
-		MysqlTarget:         "root:123456@tcp(127.0.0.1:3306)/crontab?charset=utf8mb4&parseTime=True&loc=Local",
+		MysqlTarget:         "test:test@tcp(127.0.0.1:3306)/cron?charset=utf8mb4&parseTime=True&loc=Local",
 	}
 }
 

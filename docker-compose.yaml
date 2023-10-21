@@ -1,0 +1,38 @@
+version : "3"
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: mysql5.7
+    ports:
+      - "3306:3306"
+    platform: linux/x86_64
+    command:
+      # 设置协议认证方式(加密方式)
+      --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: cron                #数据库名
+      MYSQL_USER: test                    #自定义数据库的用户，权限只作用于MYSQL_DATABASE配置的数据库
+      MYSQL_PASSWORD: test                #自定义数据库的用户，权限只作用于MYSQL_DATABASE配置的数据库
+      MYSQL_ROOT_HOST: 0.0.0.0
+  etcd:
+    hostname: etcd
+    container_name: etcd-cluster
+    image: bitnami/etcd:3
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    ports:
+      - "2379:2379"
+      - "2380:2380"
+    privileged: true
+    environment:
+      - "ETCD_ADVERTISE_CLIENT_URLS=http://0.0.0.0:2379"
+      - "ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379"
+      - "ETCD_LISTEN_PEER_URLS=http://0.0.0.0:2380"
+      - "ETCD_INITIAL_ADVERTISE_PEER_URLS=http://0.0.0.0:2380"
+      #参数指不用密码可以连接
+      - "ALLOW_NONE_AUTHENTICATION=yes"
+      - "ETCD_INITIAL_CLUSTER=node1=http://0.0.0.0:2380"
+      - "ETCD_NAME=node1"

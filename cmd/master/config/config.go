@@ -17,7 +17,7 @@ func InitConf() {
 		EtcdEndpoints:   []string{"127.0.0.1:2379"},
 		EtcdDialTimeout: 5000,
 		Webroot:         "./webroot",
-		MysqlTarget:     "root:123456@tcp(127.0.0.1:3306)/crontab?charset=utf8mb4&parseTime=True&loc=Local",
+		MysqlTarget:     "test:test@tcp(127.0.0.1:3306)/cron?charset=utf8mb4&parseTime=True&loc=Local",
 	}
 }
 

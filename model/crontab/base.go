@@ -2,6 +2,7 @@ package crontab
 
 import (
 	"go-crontab/log"
+	"go-crontab/model/db_model"
 	"go-crontab/shutdown"
 
 	"gorm.io/driver/mysql"
@@ -18,6 +19,8 @@ func InitDb(target string) {
 	}
 	db = connect
 
+	initJobTable()
+
 	// 注册db关闭事件
 	shutdown.ConnectResourceListeners.RegisterStopListener(func() {
 		log.Info("start to close db")
@@ -29,4 +32,8 @@ func InitDb(target string) {
 
 func GetDb() *gorm.DB {
 	return db
+}
+
+func initJobTable() {
+	db.AutoMigrate(&db_model.JobLog{})
 }

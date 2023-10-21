@@ -18,6 +18,7 @@ func main() {
 	InitDepend()
 	quit := make(chan os.Signal)
 	signal.Notify(quit, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT, syscall.SIGUSR1, syscall.SIGUSR2)
+	log.Info("start to cron worker success")
 	<-quit
 	// 释放资源
 	log.Info("start to release source ")

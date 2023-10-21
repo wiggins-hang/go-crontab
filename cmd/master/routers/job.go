@@ -9,12 +9,12 @@ import (
 
 func SetJobRouter(e *gin.Engine) {
 	jobGroup := e.Group("/job")
-	jobGroup.POST("/job/save", api.JobSave)
-	jobGroup.POST("/job/delete", api.JobDelete)
-	jobGroup.GET("/job/list", api.JobList)
-	jobGroup.POST("/job/kill", api.JobKill)
-	jobGroup.GET("/job/log", api.JobLog)
-	jobGroup.GET("/worker/list", api.WorkerList)
+	jobGroup.POST("/save", api.JobSave)
+	jobGroup.POST("/delete", api.JobDelete)
+	jobGroup.GET("/list", api.JobList)
+	jobGroup.POST("/kill", api.JobKill)
+	jobGroup.GET("/log", api.JobLog)
+	e.GET("/worker/list", api.WorkerList)
 	// 静态文件目录
 	// ./webroot/index.html
 	e.StaticFile("/", config.GetConf().Webroot)

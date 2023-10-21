@@ -9,8 +9,8 @@ import (
 
 func main() {
 
-	filePath := "./test.txt"
-	file, err := os.OpenFile(filePath, os.O_WRONLY|os.O_APPEND, 0666)
+	filePath := "test.txt"
+	file, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		fmt.Println("文件打开失败", err)
 	}
