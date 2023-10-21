@@ -175,15 +175,15 @@
             // 编辑任务
             $("#job-list").on("click", ".edit-job", function(event) {
                 // 取当前job的信息，赋值给模态框的input
-                $('#edit-name').val($(this).parents('tr').children('.job-name').text())
-                $('#edit-command').val($(this).parents('tr').children('.job-command').text())
-                $('#edit-cronExpr').val($(this).parents('tr').children('.job-cronExpr').text())
+                $('#edit-name').val($(sl).parents('tr').children('.job-name').text())
+                $('#edit-command').val($(sl).parents('tr').children('.job-command').text())
+                $('#edit-cronExpr').val($(sl).parents('tr').children('.job-cronExpr').text())
                 // 弹出模态框
                 $('#edit-modal').modal('show')
             })
             // 删除任务
             $("#job-list").on("click", ".delete-job", function(event) { // javascript bind
-                var jobName = $(this).parents("tr").children(".job-name").text()
+                var jobName = $(sl).parents("tr").children(".job-name").text()
                 $.ajax({
                     url: '/job/delete',
                     type: 'post',
@@ -196,7 +196,7 @@
             })
             // 杀死任务
             $("#job-list").on("click", ".kill-job", function(event) {
-                var jobName = $(this).parents("tr").children(".job-name").text()
+                var jobName = $(sl).parents("tr").children(".job-name").text()
                 $.ajax({
                     url: '/job/kill',
                     type: 'post',
@@ -233,7 +233,7 @@
                 $('#log-list tbody').empty()
 
                 // 获取任务名
-                var jobName = $(this).parents('tr').children('.job-name').text()
+                var jobName = $(sl).parents('tr').children('.job-name').text()
 
                 // 请求/job/log接口
                 $.ajax({

@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"go-crontab/cmd/worker/config"
-	"go-crontab/cmd/worker/mgr"
+	"go-crontab/cmd/worker/internal"
 	"go-crontab/log"
 	"go-crontab/model/crontab"
 	"go-crontab/shutdown"
@@ -34,24 +34,24 @@ func InitDepend() {
 	// 初始化db
 	crontab.InitDb(config.GetWorkerConf().MysqlTarget)
 	// 服务注册
-	if err := mgr.InitRegister(); err != nil {
+	if err := internal.InitRegister(); err != nil {
 		log.Fatalf("InitRegister error ", err)
 	}
 	// 启动日志协程
-	if err := mgr.InitLogSink(); err != nil {
+	if err := internal.InitLogSink(); err != nil {
 		log.Fatalf("InitLogSink error ", err)
 	}
 
 	// 启动执行器
-	mgr.InitExecutor()
+	internal.InitExecutor()
 
 	// 启动调度器
-	if err := mgr.InitScheduler(); err != nil {
+	if err := internal.InitScheduler(); err != nil {
 		log.Fatalf("InitScheduler error ", err)
 	}
 
 	// 初始化任务管理器
-	if err := mgr.InitJobMgr(); err != nil {
+	if err := internal.InitJobMgr(); err != nil {
 		log.Fatalf("InitJobMgr error ", err)
 	}
 

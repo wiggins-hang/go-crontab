@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"go-crontab/cmd/master/mgr"
+	"go-crontab/cmd/master/internal"
 	"go-crontab/common"
 	"go-crontab/log"
 	"go-crontab/tools/jsoner"
@@ -19,8 +19,8 @@ func WorkerList(ctx *gin.Context) {
 		err error
 	)
 	workerArr := make([]string, 0)
-	if workerArr, err = mgr.GWorkerMgr.ListWorkers(); err != nil {
-		log.ErrorContextf(context.Background(), "mgr get list workers error ", err)
+	if workerArr, err = internal.GWorkerMgr.ListWorkers(); err != nil {
+		log.ErrorContextf(context.Background(), "internal get list workers error ", err)
 		ctx.JSON(http.StatusOK, common.Response{
 			Errno: -1, Msg: err.Error(), Data: nil,
 		})
@@ -38,7 +38,7 @@ func WorkerList(ctx *gin.Context) {
 func JobList(ctx *gin.Context) {
 
 	// 获取任务列表
-	jobList, err := mgr.GJobMgr.ListJobs(ctx)
+	jobList, err := internal.GJobMgr.ListJobs(ctx)
 	if err != nil {
 		log.ErrorContext(ctx, "list jobs error ", err)
 		ctx.JSON(http.StatusInternalServerError, nil)
@@ -68,7 +68,7 @@ func JobSave(ctx *gin.Context) {
 		return
 	}
 	// 保存到etcd
-	oldJob, err := mgr.GJobMgr.SaveJob(ctx, &req)
+	oldJob, err := internal.GJobMgr.SaveJob(ctx, &req)
 	if err != nil {
 		log.ErrorContextf(ctx, "job save to etcd error ", err)
 		ctx.JSON(http.StatusInternalServerError, nil)
@@ -91,7 +91,7 @@ func JobDelete(ctx *gin.Context) {
 		return
 	}
 
-	oldJob, err := mgr.GJobMgr.DeleteJob(ctx, name)
+	oldJob, err := internal.GJobMgr.DeleteJob(ctx, name)
 	if err != nil {
 		log.ErrorContextf(ctx, "delete job error name is %s error : %v", name, err)
 		ctx.JSON(http.StatusInternalServerError, oldJob)
@@ -114,7 +114,7 @@ func JobKill(ctx *gin.Context) {
 		return
 	}
 
-	if _, err := mgr.GJobMgr.DeleteJob(ctx, name); err != nil {
+	if _, err := internal.GJobMgr.DeleteJob(ctx, name); err != nil {
 		log.ErrorContextf(ctx, "delete job error ", err)
 		ctx.JSON(http.StatusInternalServerError, nil)
 		return
@@ -136,7 +136,7 @@ func JobLog(ctx *gin.Context) {
 		limit = 20
 	}
 
-	logArr, err := mgr.GLogMgr.ListLog(ctx, name, skip, limit)
+	logArr, err := internal.GLogMgr.ListLog(ctx, name, skip, limit)
 	if err != nil {
 		log.ErrorContext(ctx, "get log list mysql error ", err)
 		ctx.JSON(http.StatusInternalServerError, nil)

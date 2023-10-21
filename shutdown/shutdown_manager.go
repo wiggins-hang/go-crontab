@@ -21,17 +21,17 @@ var (
 	ConnectResourceListeners = new(StopListenerManager)
 )
 
-func (this *StopListenerManager) RegisterStopListener(fn func()) {
-	this.lock.Lock()
-	defer this.lock.Unlock()
-	this.listeners = append(this.listeners, fn)
+func (sl *StopListenerManager) RegisterStopListener(fn func()) {
+	sl.lock.Lock()
+	defer sl.lock.Unlock()
+	sl.listeners = append(sl.listeners, fn)
 }
 
-func (this *StopListenerManager) NotifyStopListener(ctx context.Context) {
-	this.lock.Lock()
-	defer this.lock.Unlock()
+func (sl *StopListenerManager) NotifyStopListener(ctx context.Context) {
+	sl.lock.Lock()
+	defer sl.lock.Unlock()
 	group := threading.NewRoutineGroup()
-	for _, listener := range this.listeners {
+	for _, listener := range sl.listeners {
 		l := listener
 		group.RunSafe(func() {
 			shutDownServer(ctx, l)

@@ -1,4 +1,4 @@
-package mgr
+package internal
 
 import (
 	"context"

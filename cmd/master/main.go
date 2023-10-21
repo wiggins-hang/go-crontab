@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"go-crontab/cmd/master/config"
-	"go-crontab/cmd/master/mgr"
+	"go-crontab/cmd/master/internal"
 	"go-crontab/cmd/master/routers"
 	"go-crontab/common"
 	"go-crontab/log"
@@ -38,11 +38,11 @@ func InitDepend() {
 	// 初始化db
 	crontab.InitDb(config.GetConf().MysqlTarget)
 
-	if err := mgr.InitWorkerMgr(); err != nil {
+	if err := internal.InitWorkerMgr(); err != nil {
 		log.Fatalf("InitWorkerMgr error %s", err.Error())
 	}
 
-	if err := mgr.InitJobMgr(); err != nil {
+	if err := internal.InitJobMgr(); err != nil {
 		log.Fatalf("InitJobMgr error %s", err.Error())
 	}
 
